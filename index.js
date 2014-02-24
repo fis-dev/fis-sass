@@ -10,8 +10,8 @@ function requireBinding() {
     candidates = map[ process.platform + '-' + process.arch ] || [];
 
     function greaterThanOrEqual( a, b ) {
-        return parseInt( a.replace(/\./g, '00') ) >=
-                parseInt( b.replace(/\./g, '00') );
+        return parseInt( a.replace(/\./g, '00'), 10 ) >=
+                parseInt( b.replace(/\./g, '00'), 10 );
     }
 
     if ( candidates.length ) {
