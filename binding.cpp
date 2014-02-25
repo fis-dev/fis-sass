@@ -11,7 +11,6 @@ using namespace std;
 
 void prepareOptions( const Arguments& args, sass_context* ctx ) {
   char *source;
-  char *imagePath;
   char *path;
   int output_style;
   int source_comments;
@@ -21,22 +20,17 @@ void prepareOptions( const Arguments& args, sass_context* ctx ) {
   source = new char[strlen(*astr)+1];
   strcpy(source, *astr);
 
-  // 处理image path
-  String::AsciiValue bstr(args[1]);
-  imagePath = new char[strlen(*bstr)+1];
-  strcpy(imagePath, *bstr);
-
   // 处理path
-  String::AsciiValue cstr(args[2]);
+  String::AsciiValue cstr(args[1]);
   path = new char[strlen(*cstr)+1];
   strcpy(path, *cstr);
 
   // 处理style, comments
-  output_style = args[3]->Int32Value();
-  source_comments = args[4]->Int32Value();
+  output_style = args[2]->Int32Value();
+  source_comments = args[3]->Int32Value();
 
   ctx->source_string = source;
-  ctx->options.image_path = imagePath;
+  ctx->options.image_path = new char[0];
   ctx->options.output_style = output_style;
   ctx->options.source_comments = source_comments;
   ctx->options.include_paths = path;
