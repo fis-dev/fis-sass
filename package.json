@@ -1,6 +1,6 @@
 {
   "name": "fis-sass",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Anothor libsass wrapper for node.",
   "main": "index.js",
   "scripts": {
