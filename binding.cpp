@@ -16,12 +16,12 @@ void prepareOptions( const Arguments& args, sass_context* ctx ) {
   int source_comments;
 
   // 处理data
-  String::AsciiValue astr(args[0]);
+  String::Utf8Value astr(args[0]);
   source = new char[strlen(*astr)+1];
   strcpy(source, *astr);
 
   // 处理path
-  String::AsciiValue cstr(args[1]);
+  String::Utf8Value cstr(args[1]);
   path = new char[strlen(*cstr)+1];
   strcpy(path, *cstr);
 
