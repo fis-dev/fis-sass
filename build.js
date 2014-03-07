@@ -168,48 +168,55 @@ function download() {
 // try to rebuild this.
 function rebuild( error ) {
     var done = this,
-        cp;
-
-    // if donwload fail then rebuild this.
-    if ( error ) {
         cp = require('child_process');
 
-        cp.spawn(
-            process.platform === 'win32' ? 'node-gyp.cmd' : 'node-gyp', ['rebuild'], {
-            customFds: [0, 1, 2]
-        })
-        .on('exit', function(err) {
-            if (err) {
-                if (err === 127) {
-                    console.error(
-                        'node-gyp not found! Please upgrade your install of npm! You need at least 1.1.5 (I think) ' +
-                        'and preferably 1.1.30.'
-                    );
-                } else {
-                    console.error('Build failed');
-                }
-                return process.exit(err);
+    cp.spawn(
+        process.platform === 'win32' ? 'node-gyp.cmd' : 'node-gyp', ['rebuild'], {
+        customFds: [0, 1, 2]
+    })
+    .on('exit', function(err) {
+        if (err) {
+            if (err === 127) {
+                console.error(
+                    'node-gyp not found! Please upgrade your install of npm! You need at least 1.1.5 (I think) ' +
+                    'and preferably 1.1.30.'
+                );
+            } else {
+                console.error('Build failed');
             }
-            done( false );
-        });
-    } else {
-        done( error );
-    }
-}
 
-function install() {
-    step( download, rebuild , this );
+            done( err );
+        }
+
+        done( false );
+    });
 }
 
 function test( err ) {
-
     // try to run the test script.
-    try {
-        require('./test.js');
-    } catch ( e ) {
-        console.error('Test failed!');
-        process.exit( 1 );
+    if ( !err ) {
+        try {
+            delete require.cache[require.resolve('./test.js')];
+            delete require.cache[require.resolve('./index.js')];
+
+            require('./test.js');
+            this( false );
+        } catch ( e ) {
+            console.error('Test failed!');
+            err = true;
+        }
     }
+
+    this( err );
 }
 
-step( install, test );
+step( download, test, function( error ) {
+    // Do I need to rebuild?
+    if ( error ) {
+        step( rebuild, test, this );
+    } else {
+        return;
+    }
+}, function( error ) {
+    process.exit( error ? 1 : 0 );
+});
