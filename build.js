@@ -9,12 +9,55 @@
  * 3. Run the test script.
  */
 
-var step = require('step');
+var step = require('step'),
+    fs = require('fs'),
+    path = require('path');
 
+function mkdirP ( p, mode, made ) {
+    if (mode === undefined) {
+        mode = 0777 & (~process.umask());
+    }
+    if (!made) made = null;
+
+    if (typeof mode === 'string') mode = parseInt(mode, 8);
+    p = path.resolve(p);
+
+    try {
+        fs.mkdirSync(p, mode);
+        made = made || p;
+    }
+    catch (err0) {
+        switch (err0.code) {
+            case 'ENOENT' :
+                made = mkdirP(path.dirname(p), mode, made);
+                mkdirP(p, mode, made);
+                break;
+
+            // In the case of any other error, just see if there's a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                var stat;
+                try {
+                    stat = fs.statSync(p);
+                }
+                catch (err1) {
+                    throw err0;
+                }
+                if (!stat.isDirectory()) throw err0;
+                break;
+        }
+    }
+
+    return made;
+}
+
+// Try to download binding.node from github.
 function download() {
     var pkg = require('./package.json'),
         https = require('https'),
         url = require('url'),
+        done = this,
         githubUser, githubRepos, downloadUrl;
 
     // https://github.com/2betop/fis-sass.git
@@ -67,30 +110,91 @@ function download() {
             modPath = process.platform + '-' + process.arch + '/' +
                     candidate + '/binding.node';
         } else {
-            return this.call( null, true );
+            console.error( 'Can\'t find the binding.node file.' );
+            return done( true );
         }
 
         // start to download.
         var options = url.parse( downloadUrl + modPath ),
+            dest = './build/Release/binding.node',
             client;
 
-        client = https.get( options, function( res ) {
-            console.log("statusCode: ", res.statusCode);
-            console.log("headers: ", res.headers);
+        if ( fs.existsSync( dest ) ) {
+            console.log( 'The binding.node file exist, skip download.' );
+            done( false );
+            return;
+        }
 
-            res.on('data', function(d) {
-                process.stdout.write(d);
-            });
+        console.log('Downloading', options.href );
+        client = https.get( options, function( res ) {
+            var count = 0,
+                notifiedCount = 0,
+                outFile;
+
+            if ( res.statusCode === 200 ) {
+                mkdirP( path.dirname( dest ) );
+                outFile = fs.openSync( dest, 'w' );
+
+                res.on('data', function( data ) {
+                    fs.writeSync(outFile, data, 0, data.length, null);
+                    count += data.length;
+
+                    if ( (count - notifiedCount) > 1024 * 1024 ) {
+                      console.log('Received ' + Math.floor( count / 1024 ) + 'K...');
+                      notifiedCount = count;
+                    }
+                });
+
+                res.addListener('end', function() {
+                    console.log('Received ' + Math.floor(count / 1024) + 'K total.');
+                    fs.closeSync( outFile );
+                    done( false );
+                });
+
+            } else {
+                client.abort()
+                console.error('Error requesting archive');
+                done( true );
+            }
         }).on('error', function(e) {
-            this.call( null, true, e );
+            console.error( e.message );
+            done( true, e );
         });
     } else {
-        this.call( null, true );
+        done( true );
     }
 }
 
-function rebuild() {
-    return true;
+// try to rebuild this.
+function rebuild( error ) {
+    var done = this,
+        cp;
+
+    // if donwload fail then rebuild this.
+    if ( error ) {
+        cp = require('child_process');
+
+        cp.spawn(
+            process.platform === 'win32' ? 'node-gyp.cmd' : 'node-gyp', ['rebuild'], {
+            customFds: [0, 1, 2]
+        })
+        .on('exit', function(err) {
+            if (err) {
+                if (err === 127) {
+                    console.error(
+                        'node-gyp not found! Please upgrade your install of npm! You need at least 1.1.5 (I think) ' +
+                        'and preferably 1.1.30.'
+                    );
+                } else {
+                    console.error('Build failed');
+                }
+                return process.exit(err);
+            }
+            done( false );
+        });
+    } else {
+        done( error );
+    }
 }
 
 function install() {
