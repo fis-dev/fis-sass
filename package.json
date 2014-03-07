@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/2betop/fis-sass/issues"
   },
-  "homepage": "https://github.com/2betop/fis-sass"
+  "homepage": "https://github.com/2betop/fis-sass",
+  "dependencies": {
+    "step": "0.0.5"
+  }
 }
