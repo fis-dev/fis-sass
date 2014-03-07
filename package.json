@@ -1,6 +1,6 @@
 {
   "name": "fis-sass",
-  "version": "0.1.6",
+  "version": "0.1.9",
   "description": "Anothor libsass wrapper for node.",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/2betop/fis-sass/issues"
   },
-  "homepage": "https://github.com/2betop/fis-sass"
+  "homepage": "https://github.com/2betop/fis-sass",
+  "dependencies": {
+    "step": "0.0.5"
+  }
 }
