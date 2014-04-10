@@ -18,15 +18,20 @@ SASS_OUTPUT_STYLE = {
 };
 
 function prepareOptions( options ) {
-    var paths, style, comments;
+    var paths, style, comments, sass2scss;
 
     options = typeof options !== 'object' ? {} : options;
     paths = options.include_paths || options.includePaths || [];
     style = SASS_OUTPUT_STYLE[options.output_style || options.outputStyle] || 0;
 
+    if ( typeof options.sass2scss === 'undefined' && options.data ) {
+        options.sass2scss = !~options.data.indexOf('{');
+    }
+
     return {
         paths: paths,
-        style: style
+        style: style,
+        sass2scss: options.sass2scss ? 1: 0
     };
 };
 
@@ -40,5 +45,5 @@ exports.renderSync = function( options ) {
 
     newOptions = prepareOptions( options );
 
-    return binding.renderSync(options.data, newOptions.paths.join( path.delimiter ), newOptions.style);
+    return binding.renderSync(options.data, newOptions.paths.join( path.delimiter ), newOptions.style, 0, newOptions.sass2scss);
 }

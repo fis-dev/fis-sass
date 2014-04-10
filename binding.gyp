@@ -3,6 +3,7 @@
         "target_name": "binding",
         "sources": [
             "binding.cpp",
+            "sass2scss/sass2scss.cpp",
             "libsass/ast.cpp",
             "libsass/base64vlq.cpp",
             "libsass/bind.cpp",

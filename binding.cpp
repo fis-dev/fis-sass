@@ -5,15 +5,18 @@
 #include <iostream>
 #include <cstdlib>
 #include "libsass/sass_interface.h"
+#include "sass2scss/sass2scss.h"
 
 using namespace v8;
 using namespace std;
+using namespace Sass;
 
 void prepareOptions( const Arguments& args, sass_context* ctx ) {
   char *source;
   char *path;
   int output_style;
   int source_comments;
+  int issass;
 
   // 处理data
   String::Utf8Value astr(args[0]);
@@ -28,6 +31,13 @@ void prepareOptions( const Arguments& args, sass_context* ctx ) {
   // 处理style, comments
   output_style = args[2]->Int32Value();
   source_comments = args[3]->Int32Value();
+  issass = args[4]->Int32Value();
+
+  if ( issass ) {
+    // printf("here\n");
+    source = sass2scss( source, SASS2SCSS_PRETTIFY_1 );
+    // printf("%s\n", source);
+  }
 
   ctx->source_string = source;
   ctx->options.image_path = new char[0];
