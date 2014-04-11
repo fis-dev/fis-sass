@@ -1,7 +1,7 @@
 {
   "name": "fis-sass",
-  "version": "0.1.11",
-  "description": "Anothor libsass wrapper for node.",
+  "version": "0.1.12",
+  "description": "Anothor libsass wrapper for node. Support sass syntax.",
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/2betop/fis-sass.git"
+    "url": "https://github.com/fis-dev/fis-sass.git"
   },
   "keywords": [
     "node",
@@ -20,9 +20,9 @@
   "license": "ISC",
   "gypfile": true,
   "bugs": {
-    "url": "https://github.com/2betop/fis-sass/issues"
+    "url": "https://github.com/fis-dev/fis-sass/issues"
   },
-  "homepage": "https://github.com/2betop/fis-sass",
+  "homepage": "https://github.com/fis-dev/fis-sass",
   "dependencies": {
     "step": "0.0.5"
   }
