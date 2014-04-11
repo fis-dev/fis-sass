@@ -9,3 +9,13 @@ if ( !sass.renderSync({ data: source }).match( expect ) ) {
 } else {
     console.log( 'Simple test passed!');
 }
+
+
+var fs = require('fs');
+source = fs.readFileSync('test.sass', 'utf-8');
+expect = fs.readFileSync('expect.css', 'utf-8');
+if ( sass.renderSync({ data: source }) === expect ) {
+    console.log( 'Sass syntax supported.');
+} else {
+    console.log( 'Sass syntax unsupported.');
+}
