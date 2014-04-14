@@ -2,3 +2,5 @@
 /bindings/*
 .DS_Store
 /node_modules
+/libsass
+/sass2scss
