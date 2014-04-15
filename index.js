@@ -18,21 +18,20 @@ SASS_OUTPUT_STYLE = {
 };
 
 function prepareOptions( options ) {
-    var paths, style, comments, sass2scss;
+    var paths, style, comments;
 
     options = typeof options !== 'object' ? {} : options;
     paths = options.include_paths || options.includePaths || [];
     style = SASS_OUTPUT_STYLE[options.output_style || options.outputStyle] || 0;
 
-    if ( typeof options.sass2scss === 'undefined' && options.data ) {
-        options.sass2scss = !~options.data.indexOf('{');
-    }
-
     return {
         paths: paths,
-        style: style,
-        sass2scss: options.sass2scss ? 1: 0
+        style: style
     };
+};
+
+var sass2scss = exports.sass2scss = function( input ) {
+    return binding.sass2scss( input );
 };
 
 // 暂只支持options.data用法，因为fis中只会这么用。
@@ -45,5 +44,10 @@ exports.renderSync = function( options ) {
 
     newOptions = prepareOptions( options );
 
-    return binding.renderSync(options.data, newOptions.paths.join( path.delimiter ), newOptions.style, 0, newOptions.sass2scss);
+    if ( !~options.data.indexOf('{') ) {
+        options.data = sass2scss( options.data );
+    }
+
+    return binding.renderSync(options.data, newOptions.paths.join( path.delimiter ), newOptions.style );
 }
+

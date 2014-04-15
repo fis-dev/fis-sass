@@ -16,7 +16,6 @@ void prepareOptions( const Arguments& args, sass_context* ctx ) {
   char *path;
   int output_style;
   int source_comments;
-  int issass;
 
   // 处理data
   String::Utf8Value astr(args[0]);
@@ -31,13 +30,6 @@ void prepareOptions( const Arguments& args, sass_context* ctx ) {
   // 处理style, comments
   output_style = args[2]->Int32Value();
   source_comments = args[3]->Int32Value();
-  issass = args[4]->Int32Value();
-
-  if ( issass ) {
-    // printf("here\n");
-    source = sass2scss( source, SASS2SCSS_PRETTIFY_1 );
-    // printf("%s\n", source);
-  }
 
   ctx->source_string = source;
   ctx->options.image_path = new char[0];
@@ -73,9 +65,28 @@ Handle<Value> RenderSync(const Arguments& args) {
   return scope.Close(Undefined());
 }
 
+Handle<Value> Sass2scss(const Arguments& args) {
+  HandleScope scope;
+  char *source;
+
+  // 处理data
+  String::Utf8Value astr(args[0]);
+  source = new char[strlen(*astr)+1];
+  strcpy(source, *astr);
+
+  source = sass2scss( source, SASS2SCSS_PRETTIFY_1 );
+
+  Local<Value> output = Local<Value>::New(String::New(source));
+
+  return scope.Close(output);
+}
+
 void init(Handle<Object> exports) {
   exports->Set(String::NewSymbol("renderSync"),
       FunctionTemplate::New(RenderSync)->GetFunction());
+
+  exports->Set(String::NewSymbol("sass2scss"),
+      FunctionTemplate::New(Sass2scss)->GetFunction());
 }
 
 NODE_MODULE(binding, init)
