@@ -44,7 +44,7 @@ exports.renderSync = function( options ) {
 
     newOptions = prepareOptions( options );
 
-    if ( options.sass2scss !== false && !~options.data.indexOf('{') ) {
+    if ( options.sass2scss ) {
         options.data = sass2scss( options.data );
     }
 

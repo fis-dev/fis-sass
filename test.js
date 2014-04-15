@@ -14,7 +14,7 @@ if ( !sass.renderSync({ data: source }).match( expect ) ) {
 var fs = require('fs');
 source = fs.readFileSync('test.sass', 'utf-8');
 expect = fs.readFileSync('expect.css', 'utf-8');
-if ( sass.renderSync({ data: source }) === expect ) {
+if ( sass.renderSync({ data: source, sass2scss: true }) === expect ) {
     console.log( 'Sass syntax supported.');
 } else {
     console.log( 'Sass syntax unsupported.');
