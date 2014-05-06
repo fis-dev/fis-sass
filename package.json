@@ -1,6 +1,6 @@
 {
   "name": "fis-sass",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Anothor libsass wrapper for node. Support sass syntax.",
   "main": "index.js",
   "scripts": {
@@ -25,5 +25,6 @@
   "homepage": "https://github.com/fis-dev/fis-sass",
   "dependencies": {
     "step": "0.0.5"
-  }
+  },
+  "bindingsCDN": "https://raw.githubusercontent.com/2betop/fis-sass/master/bindings/"
 }
