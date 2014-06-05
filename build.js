@@ -11,46 +11,8 @@
 
 var step = require('step'),
     fs = require('fs'),
-    path = require('path');
-
-function mkdirP ( p, mode, made ) {
-    if (mode === undefined) {
-        mode = 0777 & (~process.umask());
-    }
-    if (!made) made = null;
-
-    if (typeof mode === 'string') mode = parseInt(mode, 8);
-    p = path.resolve(p);
-
-    try {
-        fs.mkdirSync(p, mode);
-        made = made || p;
-    }
-    catch (err0) {
-        switch (err0.code) {
-            case 'ENOENT' :
-                made = mkdirP(path.dirname(p), mode, made);
-                mkdirP(p, mode, made);
-                break;
-
-            // In the case of any other error, just see if there's a dir
-            // there already.  If so, then hooray!  If not, then something
-            // is borked.
-            default:
-                var stat;
-                try {
-                    stat = fs.statSync(p);
-                }
-                catch (err1) {
-                    throw err0;
-                }
-                if (!stat.isDirectory()) throw err0;
-                break;
-        }
-    }
-
-    return made;
-}
+    path = require('path'),
+    util = require('./util.js');
 
 // Try to download binding.node from github.
 function download() {
@@ -116,9 +78,7 @@ function download() {
         }
 
         // start to download.
-        var options = url.parse( downloadUrl + modPath ),
-            dest = './build/Release/binding.node',
-            client;
+        var dest = './build/Release/binding.node';
 
         if ( fs.existsSync( dest ) ) {
             console.log( 'The binding.node file exist, skip download.' );
@@ -126,41 +86,11 @@ function download() {
             return;
         }
 
-        console.log('Downloading', options.href );
-        client = https.get( options, function( res ) {
-            var count = 0,
-                notifiedCount = 0,
-                outFile;
+        util.download({
+            remote: downloadUrl + modPath,
+            dest: './build/Release/binding.node'
+        }, done);
 
-            if ( res.statusCode === 200 ) {
-                mkdirP( path.dirname( dest ) );
-                outFile = fs.openSync( dest, 'w' );
-
-                res.on('data', function( data ) {
-                    fs.writeSync(outFile, data, 0, data.length, null);
-                    count += data.length;
-
-                    if ( (count - notifiedCount) > 1024 * 1024 ) {
-                      console.log('Received ' + Math.floor( count / 1024 ) + 'K...');
-                      notifiedCount = count;
-                    }
-                });
-
-                res.addListener('end', function() {
-                    console.log('Received ' + Math.floor(count / 1024) + 'K total.');
-                    fs.closeSync( outFile );
-                    done( false );
-                });
-
-            } else {
-                client.abort()
-                console.error('Error requesting archive');
-                done( true );
-            }
-        }).on('error', function(e) {
-            console.error( e.message );
-            done( true, e );
-        });
     } else {
         done( true );
     }

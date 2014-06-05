@@ -26,5 +26,5 @@
   "dependencies": {
     "step": "0.0.5"
   },
-  "bindingsCDN": "https://raw.githubusercontent.com/fis-dev/fis-sass/master/bindings/"
+  "bindingsCDN": "http://git.oschina.net/2betop/static/raw/master/fis-sass/bindings/"
 }
