@@ -3,7 +3,7 @@
         "target_name": "binding",
         "sources": [
             "binding.cpp",
-            "sass2scss/sass2scss.cpp",
+            "lib/sync.cc",
             "libsass/ast.cpp",
             "libsass/base64vlq.cpp",
             "libsass/bind.cpp",
@@ -27,11 +27,17 @@
             "libsass/source_map.cpp",
             "libsass/to_c.cpp",
             "libsass/to_string.cpp",
-            "libsass/units.cpp"
+            "libsass/units.cpp",
+            "libsass/utf8_string.cpp",
+            "libsass/util.cpp",
+            "libsass/sass2scss/sass2scss.cpp"
         ],
         "cflags!": ["-fno-exceptions"],
         "cflags_cc!": ["-fno-exceptions"],
         "cflags_cc": ["-fexceptions", "-frtti"],
+        "include_dirs" : [
+            "<!(node -e \"require('nan')\")"
+        ],
         "conditions": [
             ["OS=='mac'", {
                 "xcode_settings": {

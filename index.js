@@ -1,6 +1,6 @@
 'use strict';
 
-var binding, SASS_OUTPUT_STYLE, path;
+var binding, SASS_OUTPUT_STYLE, SASS_SOURCE_COMMENTS, path;
 
 path = require('path');
 
@@ -17,37 +17,51 @@ SASS_OUTPUT_STYLE = {
     compressed: 3
 };
 
+SASS_SOURCE_COMMENTS = {
+    none: 0,
+    normal: 1,
+    'default': 1,
+    map: 2
+};
+
+
 function prepareOptions( options ) {
-    var paths, style, comments;
+    var paths, style, sourceComments;
 
-    options = typeof options !== 'object' ? {} : options;
-    paths = options.include_paths || options.includePaths || [];
-    style = SASS_OUTPUT_STYLE[options.output_style || options.outputStyle] || 0;
-
-    return {
-        paths: paths,
-        style: style
-    };
-};
-
-var sass2scss = exports.sass2scss = function( input ) {
-    return binding.sass2scss( input );
-};
-
-// 暂只支持options.data用法，因为fis中只会这么用。
-exports.renderSync = function( options ) {
-    var newOptions;
+    options = options || {};
 
     if ( options.file ) {
         throw new Error('options.file is not supported!');
     }
 
-    newOptions = prepareOptions( options );
+    sourceComments = options.source_comments || options.sourceComments;
+    
+    if (options.sourceMap && !sourceComments) {
+        sourceComments = 'map';
+    }
+    
+    paths = options.include_paths || options.includePaths || [];
 
-    if ( options.sass2scss ) {
-        options.data = sass2scss( options.data );
+    if (options.sassSyntax) {
+        options.data = sass2scss(options.data);
     }
 
-    return binding.renderSync(options.data, newOptions.paths.join( path.delimiter ), newOptions.style );
+    return {
+        data: options.data,
+        paths: paths.join(path.delimiter),
+        imagePath: options.image_path || options.imagePath || '',
+        style: SASS_OUTPUT_STYLE[options.output_style || options.outputStyle] || 0,
+        comments: SASS_SOURCE_COMMENTS[sourceComments] || 0,
+        precision: parseInt(options.precision) || 5
+    };
+};
+
+var sass2scss = exports.sass2scss = function(input) {
+    return binding.sass2scss(input);
+}
+
+// 暂只支持options.data用法，因为fis中只会这么用。
+exports.renderSync = function( options ) {
+    return binding.renderSync(prepareOptions(options));
 }
 
