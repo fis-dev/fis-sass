@@ -1,6 +1,6 @@
 {
   "name": "fis-sass",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Anothor libsass wrapper for node. Support sass syntax.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "fis"
   ],
   "author": "2betop",
-  "license": "ISC",
+  "license": "MIT",
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/fis-dev/fis-sass/issues"
@@ -27,5 +27,5 @@
     "step": "0.0.5",
     "nan": "~1.2.0"
   },
-  "bindingsCDN": "http://git.oschina.net/2betop/static/raw/master/fis-sass/bindings/"
+  "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/0.1.17/"
 }
