@@ -1,6 +1,6 @@
 {
   "name": "fis-sass",
-  "version": "0.1.17",
+  "version": "0.2.0",
   "description": "Anothor libsass wrapper for node. Support sass syntax.",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,5 @@
     "step": "0.0.5",
     "nan": "~1.2.0"
   },
-  "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/0.1.17/"
+  "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/0.2.0/"
 }

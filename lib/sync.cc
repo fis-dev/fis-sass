@@ -19,8 +19,11 @@ void prepareOptions(Local<Object> options, sass_context* ctx) {
     ctx->options.image_path = CreateString(options->Get(NanNew("imagePath")));
     ctx->options.output_style = options->Get(NanNew("style"))->Int32Value();
     ctx->options.source_comments = options->Get(NanNew("comments"))->Int32Value();
+    ctx->options.omit_source_map_url = options->Get(NanNew("omit_source_map_url"))->Int32Value();
+    ctx->options.is_indented_syntax_src = options->Get(NanNew("is_indented_syntax_src"))->Int32Value();
     ctx->options.include_paths = CreateString(options->Get(NanNew("paths")));
     ctx->options.precision = options->Get(NanNew("precision"))->Int32Value();
+    ctx->options.source_map_file = CreateString(options->Get(NanNew("source_map_file")));
 }
 
 // Simple synchronous access to the `Estimate()` function

@@ -35,16 +35,17 @@ function prepareOptions( options ) {
     }
 
     sourceComments = options.source_comments || options.sourceComments;
-    
+
     if (options.sourceMap && !sourceComments) {
         sourceComments = 'map';
     }
-    
+
     paths = options.include_paths || options.includePaths || [];
 
-    if (options.sassSyntax) {
-        options.data = sass2scss(options.data);
-    }
+    // if (options.sassSyntax) {
+    //     options.is_indented_syntax_src = true;
+    //     // options.data = sass2scss(options.data);
+    // }
 
     return {
         data: options.data,
@@ -52,7 +53,10 @@ function prepareOptions( options ) {
         imagePath: options.image_path || options.imagePath || '',
         style: SASS_OUTPUT_STYLE[options.output_style || options.outputStyle] || 0,
         comments: SASS_SOURCE_COMMENTS[sourceComments] || 0,
-        precision: parseInt(options.precision) || 5
+        precision: parseInt(options.precision) || 5,
+        omit_source_map_url: options.omit_source_map_url ? 1 : 0,
+        is_indented_syntax_src: options.is_indented_syntax_src || options.sassSyntax ? 1 : 0,
+        source_map_file: options.source_map_file || ''
     };
 };
 
