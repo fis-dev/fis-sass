@@ -78,7 +78,7 @@ function download() {
         }
 
         // start to download.
-        var dest = './build/Release/binding.node';
+        var dest = './vender/' +process.platform + '-' + process.arch+ '/binding.node';
 
         if ( fs.existsSync( dest ) ) {
             console.log( 'The binding.node file exist, skip download.' );
@@ -88,7 +88,7 @@ function download() {
 
         util.download({
             remote: downloadUrl + modPath,
-            dest: './build/Release/binding.node'
+            dest: dest
         }, done);
 
     } else {

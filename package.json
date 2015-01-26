@@ -1,8 +1,9 @@
 {
   "name": "fis-sass",
   "version": "0.2.0",
+  "libsass": "3.1.0",
   "description": "Anothor libsass wrapper for node. Support sass syntax.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "node test.js",
     "install": "node build.js"
@@ -24,8 +25,9 @@
   },
   "homepage": "https://github.com/fis-dev/fis-sass",
   "dependencies": {
-    "step": "0.0.5",
-    "nan": "~1.2.0"
+    "chalk": "^0.5.1",
+    "nan": "^1.3.0",
+    "step": "0.0.5"
   },
   "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/0.2.0/"
 }
