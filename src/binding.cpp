@@ -74,10 +74,11 @@ struct Sass_Import** sass_importer2(const char* file, const char* prev, void* co
   Handle<Value> argv[] = {
     NanNew<String>(strdup(file ? strdup(file) : 0)),
     NanNew<String>(strdup(prev ? strdup(prev) : 0)),
-    NanNew<Number>(imports_collection.size() - 1)
+    NanNew<Number>(imports_collection.size() - 1),
+    NanNew<Number>(1)
   };
 
-  NanNew<Value>(ctx_w->importer_callback->Call(3, argv));
+  NanNew<Value>(ctx_w->importer_callback->Call(4, argv));
 
   if (try_catch.HasCaught()) {
     node::FatalException(try_catch);
@@ -118,9 +119,12 @@ void ExtractOptions(Local<Object> options, void* cptr, sass_context_wrapper* ctx
   ctx_w->importer_callback = new NanCallback(importer_callback);
 
   if (!importer_callback->IsUndefined()) {
-    // uv_async_init(uv_default_loop(), &ctx_w->async, (uv_async_cb)dispatched_async_uv_callback);
-    // sass_option_set_importer(sass_options, sass_make_importer(sass_importer, ctx_w));
-    sass_option_set_importer(sass_options, sass_make_importer(sass_importer2, ctx_w));
+    if (isSync) {
+      sass_option_set_importer(sass_options, sass_make_importer(sass_importer2, ctx_w));
+    } else {
+      uv_async_init(uv_default_loop(), &ctx_w->async, (uv_async_cb)dispatched_async_uv_callback);
+      sass_option_set_importer(sass_options, sass_make_importer(sass_importer, ctx_w));
+    }
   }
 
   sass_option_set_input_path(sass_options, CreateString(options->Get(NanNew("file"))));
