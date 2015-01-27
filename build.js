@@ -78,7 +78,7 @@ function download() {
         }
 
         // start to download.
-        var dest = './vender/' +process.platform + '-' + process.arch+ '/binding.node';
+        var dest = './vendor/' +process.platform + '-' + process.arch+ '/binding.node';
 
         if ( fs.existsSync( dest ) ) {
             console.log( 'The binding.node file exist, skip download.' );
@@ -128,7 +128,7 @@ function test( err ) {
     if ( !err ) {
         try {
             delete require.cache[require.resolve('./test.js')];
-            delete require.cache[require.resolve('./index.js')];
+            delete require.cache[require.resolve('./lib/index.js')];
 
             require('./test.js');
             this( false );
