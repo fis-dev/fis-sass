@@ -26,11 +26,10 @@ struct Sass_Import** sass_importer2(const char* file, const char* prev, void* co
   Handle<Value> argv[] = {
     NanNew<String>(strdup(file ? strdup(file) : 0)),
     NanNew<String>(strdup(prev ? strdup(prev) : 0)),
-    NanNew<Number>(imports_collection.size() - 1),
-    NanNew<Number>(1)
+    NanNew<Number>(imports_collection.size() - 1)
   };
 
-  NanNew<Value>(ctx_w->importer_callback->Call(4, argv));
+  NanNew<Value>(ctx_w->importer_callback->Call(3, argv));
 
   if (try_catch.HasCaught()) {
     node::FatalException(try_catch);
@@ -159,7 +158,7 @@ NAN_METHOD(RenderSync) {
   NanReturnValue(NanNew<Boolean>(result == 0));
 }
 
-NAN_METHOD(ImportedCallback2) {
+NAN_METHOD(ImportedCallback) {
   NanScope();
 
   TryCatch try_catch;
@@ -214,7 +213,7 @@ NAN_METHOD(ImportedCallback2) {
 
 void RegisterModule(v8::Handle<v8::Object> target) {
   NODE_SET_METHOD(target, "renderSync", RenderSync);
-  NODE_SET_METHOD(target, "importedCallback2", ImportedCallback2);
+  NODE_SET_METHOD(target, "importedCallback", ImportedCallback);
 }
 
 NODE_MODULE(binding, RegisterModule);

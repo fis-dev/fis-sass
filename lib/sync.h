@@ -5,6 +5,6 @@
 #include <nan.h>
 
 NAN_METHOD(RenderSync);
-NAN_METHOD(Sass2scss);
+NAN_METHOD(importedCallback);
 
 #endif  // FIS_SASS_SYNC_H_

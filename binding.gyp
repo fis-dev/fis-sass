@@ -31,6 +31,7 @@
         'src/libsass/sass2scss.cpp',
         'src/libsass/sass_context.cpp',
         'src/libsass/sass_functions.cpp',
+        'src/libsass/sass_interface.cpp',
         'src/libsass/sass_util.cpp',
         'src/libsass/sass_values.cpp',
         'src/libsass/source_map.cpp',
