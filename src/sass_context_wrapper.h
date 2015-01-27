@@ -15,10 +15,10 @@ extern "C" {
     Sass_Data_Context* dctx;
     Sass_File_Context* fctx;
     Persistent<Object> result;
-    uv_work_t request;
-    uv_mutex_t importer_mutex;
-    uv_cond_t importer_condition_variable;
-    uv_async_t async;
+    // uv_work_t request;
+    // uv_mutex_t importer_mutex;
+    // uv_cond_t importer_condition_variable;
+    // uv_async_t async;
     const char* file;
     const char* prev;
     void* cookie;

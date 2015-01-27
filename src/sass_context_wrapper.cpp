@@ -24,8 +24,8 @@ extern "C" {
 
   sass_context_wrapper* sass_make_context_wrapper() {
     auto ctx_w = (sass_context_wrapper*)calloc(1, sizeof(sass_context_wrapper));
-    uv_mutex_init(&ctx_w->importer_mutex);
-    uv_cond_init(&ctx_w->importer_condition_variable);
+    // uv_mutex_init(&ctx_w->importer_mutex);
+    // uv_cond_init(&ctx_w->importer_condition_variable);
     return ctx_w;
   }
 
@@ -45,8 +45,8 @@ extern "C" {
     delete ctx_w->file;
     delete ctx_w->prev;
 
-    uv_mutex_destroy(&ctx_w->importer_mutex);
-    uv_cond_destroy(&ctx_w->importer_condition_variable);
+    // uv_mutex_destroy(&ctx_w->importer_mutex);
+    // uv_cond_destroy(&ctx_w->importer_condition_variable);
 
     free(ctx_w);
   }
