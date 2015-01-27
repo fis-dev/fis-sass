@@ -29,5 +29,5 @@
     "nan": "^1.3.0",
     "step": "0.0.5"
   },
-  "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/0.2.0/"
+  "bindingsCDN": "http://fisstatic.duapp.com/addons/fis-sass/3.1.0/"
 }
