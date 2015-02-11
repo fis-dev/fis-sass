@@ -141,7 +141,7 @@ NAN_METHOD(RenderSync) {
   ExtractOptions(options, dctx, ctx_w, false, true);
   compile_data(dctx);
 
-  int result = GetResult(ctx_w->result, ctx);
+  int result = GetResult(Local<Object>::New(Isolate::GetCurrent(), ctx_w->result), ctx);
   Local<String> error;
 
   if (result != 0) {
@@ -185,8 +185,8 @@ NAN_METHOD(ImportedCallback) {
         continue;
 
       Local<Object> object = Local<Object>::Cast(value);
-      char* path = CreateString(object->Get(String::New("file")));
-      char* contents = CreateString(object->Get(String::New("contents")));
+      char* path = CreateString(object->Get(String::NewFromUtf8(Isolate::GetCurrent(), "file")));
+      char* contents = CreateString(object->Get(String::NewFromUtf8(Isolate::GetCurrent(), "contents")));
 
       ctx_w->imports[i] = sass_make_import_entry(path, (!contents || contents[0] == '\0') ? 0 : strdup(contents), 0);
     }
@@ -194,8 +194,8 @@ NAN_METHOD(ImportedCallback) {
   else if (returned_value->IsObject()) {
     ctx_w->imports = sass_make_import_list(1);
     Local<Object> object = Local<Object>::Cast(returned_value);
-    char* path = CreateString(object->Get(String::New("file")));
-    char* contents = CreateString(object->Get(String::New("contents")));
+    char* path = CreateString(object->Get(String::NewFromUtf8(Isolate::GetCurrent(), "file")));
+    char* contents = CreateString(object->Get(String::NewFromUtf8(Isolate::GetCurrent(), "contents")));
 
     ctx_w->imports[0] = sass_make_import_entry(path, (!contents || contents[0] == '\0') ? 0 : strdup(contents), 0);
   }
