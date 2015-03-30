@@ -58,8 +58,8 @@ void ExtractOptions(Local<Object> options, void* cptr, sass_context_wrapper* ctx
     // ctx_w->request.data = ctx_w;
 
     // async (callback) style
-    Local<Function> success_callback = Local<Function>::Cast(options->Get(NanNew("success")));
-    Local<Function> error_callback = Local<Function>::Cast(options->Get(NanNew("error")));
+    Local<Function> success_callback = Local<Function>::Cast(options->Get(NanNew<String>("success")));
+    Local<Function> error_callback = Local<Function>::Cast(options->Get(NanNew<String>("error")));
 
     ctx_w->success_callback = new NanCallback(success_callback);
     ctx_w->error_callback = new NanCallback(error_callback);
@@ -141,7 +141,7 @@ NAN_METHOD(RenderSync) {
   ExtractOptions(options, dctx, ctx_w, false, true);
   compile_data(dctx);
 
-  int result = GetResult(ctx_w->result, ctx);
+  int result = GetResult(NanNew(ctx_w->result), ctx);
   Local<String> error;
 
   if (result != 0) {
@@ -185,8 +185,8 @@ NAN_METHOD(ImportedCallback) {
         continue;
 
       Local<Object> object = Local<Object>::Cast(value);
-      char* path = CreateString(object->Get(String::New("file")));
-      char* contents = CreateString(object->Get(String::New("contents")));
+      char* path = CreateString(object->Get(NanNew<String>("file")));
+      char* contents = CreateString(object->Get(NanNew<String>("contents")));
 
       ctx_w->imports[i] = sass_make_import_entry(path, (!contents || contents[0] == '\0') ? 0 : strdup(contents), 0);
     }
@@ -194,8 +194,8 @@ NAN_METHOD(ImportedCallback) {
   else if (returned_value->IsObject()) {
     ctx_w->imports = sass_make_import_list(1);
     Local<Object> object = Local<Object>::Cast(returned_value);
-    char* path = CreateString(object->Get(String::New("file")));
-    char* contents = CreateString(object->Get(String::New("contents")));
+    char* path = CreateString(object->Get(NanNew<String>("file")));
+    char* contents = CreateString(object->Get(NanNew<String>("contents")));
 
     ctx_w->imports[0] = sass_make_import_entry(path, (!contents || contents[0] == '\0') ? 0 : strdup(contents), 0);
   }
@@ -211,9 +211,12 @@ NAN_METHOD(ImportedCallback) {
   NanReturnValue(NanNew<Number>(0));
 }
 
-void RegisterModule(v8::Handle<v8::Object> target) {
-  NODE_SET_METHOD(target, "renderSync", RenderSync);
-  NODE_SET_METHOD(target, "importedCallback", ImportedCallback);
+void RegisterModule(Handle<Object> exports) {
+  exports->Set(NanNew<String>("renderSync"),
+    NanNew<FunctionTemplate>(RenderSync)->GetFunction());
+
+  exports->Set(NanNew<String>("importedCallback"),
+    NanNew<FunctionTemplate>(ImportedCallback)->GetFunction());
 }
 
 NODE_MODULE(binding, RegisterModule);
